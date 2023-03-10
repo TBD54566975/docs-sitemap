@@ -1,15 +1,21 @@
 # TBD Developer Docs Sitemap
-
 This repository is the roadmap for our new docs sitemap. Each folder name and file within is open for suggestions and changes. The order of the folders is alphabetal not how it will be laid out on the site. This repo is phase one and soon the doc copy will live elsewhere once we've established where our docs will live.
 
 ## Current Status
-
 Hackmd's are being created for each file in the sitemap and we'll be tagging folks to add in their ideas and copy to these files so we can get started laying the groundwork for our new docs.
 
-## Collaborative HackMD Files for each File
+## Get Started
+Step one...
+- Review and comment [SITEMAP GENERAL HackMD](https://hackmd.io/RZ5B8Hp6TIGcC9tnDtZ3fw) (listed below)
+
+Coming soon...
+- Templates for introduction files, quickstarts, and general guide pages.
+
+
+## Collaborative HackMD Files for each file
 
 ## SITEMAP GENERAL
-Edit file names, add additional files, and/or change the order.
+[Edit file names, add additional files, and/or change the order](https://hackmd.io/RZ5B8Hp6TIGcC9tnDtZ3fw)
 
 ## GETTING STARTED
 - Platform Introduction
@@ -64,11 +70,11 @@ Edit file names, add additional files, and/or change the order.
 ## MEDIA
 - Tutorials
 
-## RELEASE NOTES
-- May 5, 2022 (example)
-
 ## SAMPLE APPS
 - DWN SDKs
   - Example
 - Verifiable Credentials
   - Issue
+
+## RELEASE NOTES
+- May 5, 2022 (example)
