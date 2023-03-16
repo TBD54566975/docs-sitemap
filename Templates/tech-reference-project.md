@@ -1,0 +1,1 @@
+[Example tech ref](https://docsearch.algolia.com/docs/api) for a single project
