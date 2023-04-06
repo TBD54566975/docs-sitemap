@@ -12,18 +12,16 @@ A DWN is a personal data store. This means you can:
 *Topology of an exchange between Decentralized Web Nodes, from [DIF Decentralized Web Node Spec](https://identity.foundation/decentralized-web-node/spec/#topology)*
 
 ### Authorization
-* Note: Revisit in more detail: permissions are explicit and manual vs protocols are descriptive, syntactic, and contractual
-
 DWNs have two mechanisms to allow others access to read, write, or delete data on you node.
 - **Permissions:** Allow someone access to read, write, or delete specific data records on your node.
 - **Protocols:** Install a protocol that lets you define data types and authorization for a decentralized web app.
+
+The easiest way to understand this distinction is to think of permissions as active, explicit, and manual, whereas protocols are passive, syntactic, and contractual.
 
 ### Data Model
 Data types are bound to known schemas, letting applications agree on data models. This opens the door to applications working together in ways that's been much more difficult in traditional development platform.
 
 ### Messaging
-* Note: Might add code example of message structure here
-
 All communication is done through simple messages. Web5 makes this easy, erasing the messy mechanics of decentralized messaging. DWN Messages follow a general structure, for example a DWN requesting containing multiple messages will have a the following shape. See the [DWN spec](https://identity.foundation/decentralized-web-node/spec/#messages) for a detailed explanation of each field.
 
 ```json 

@@ -34,7 +34,7 @@ There are lots of different implementations of DIDs (called [DID methods](https:
 A [did:key](https://w3c-ccg.github.io/did-method-key/) is free and fast to spin up. Since it can be created, but not updated or deleted, it is useful for single, ephemeral interactions.
 
 #### did:web
-[did:web](https://w3c-ccg.github.io/did-method-web/) is somewhat centralized because you need a website to have one. You host your DID Document at a specified location in your website.
+[did:web](https://w3c-ccg.github.io/did-method-web/) is somewhat centralized because you need a website to have one. You host your DID Document at a specified location in your website. Here's an example of [TBD's did:web](https://www.tbd.website/.well-known/did.json).
 
 It supports the ability to create, read, update, and deactivate a DID.
 
@@ -44,21 +44,51 @@ It supports the ability to create, read, update, and deactivate a DID.
 did:ion is a very robust, very decentralized platform for anchoring your DIDs. It supports the ability to create, update, recover, and deactivate a DID.
 
 ### DID Documents
+Now that Alice and Bob have gone through one of the methods and they have their DIDs, they now need a DID document to store those DIDs. Lets learn about DID documents, what they are and what fields we might see in them.  
 #### What is it?
-A DID Document is a small `json` object that has a field for your DID, and several other key pieces of information. Every DID can be *resolved* to a corresponding DID document. A DID resolver is a mechanism that allows you to look up and retrieve the DID document associated with a particular DID.
+A DID Document is a small `json` object that has a field for your DID, called `id`. It usually has a `@context` field as well, to help 
+
+```
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1"
+  ],
+  "id": "did:example:123456789abcdefghi"
+}
+```
+
+Every DID can be *resolved* to a corresponding DID document. A DID resolver is a mechanism that allows you to look up and retrieve the DID document associated with a particular DID.
 
 If you type a URL into your browser, it resolves to a web page. You can use a service to resolve a DID to a DID document. The document includes fields that help authenticate interactions with the DID.
 
 #### What should be in it?
-The only required field is the `id` field, which contains your DID. You might find many other fields in a DID Document, such as authentication material, encryption key material, and pointers to your DWN. Read more about the fields [here](https://www.w3.org/TR/did-core/#core-properties).
+The only required field is the `id` field. This value is your DID. You might find many other fields in a DID Document, such as authentication material, encryption key material, and pointers to your DWN. Read more about the fields [here](https://www.w3.org/TR/did-core/#core-properties).
 
 
 #### Controller - Subject relationship
 ![](https://i.imgur.com/OdWtmlt.png)
 *Example of a Controller Subject relationship diagram, from [W3C DID Core Spec](https://www.w3.org/TR/did-core/)*
 
-One of the fields you might find in a DID Document is the `controller`, which is an array of objects representing one or more controlling entities of the DID. The easiest way to describe the controller-subject relationship is by coming back to Alice and Bob for an analogy.
+One of the fields you might find in a DID Document is the `verificationMethod`, which is an array of objects each representing a controlling entity of the DID. The `controller` field contains controlling entity's DID.
 
+
+```
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1"
+  ],
+  "id": "did:example:123456789abcdefghi",
+  "verificationMethod": [{
+    "id": "did:example:123456789abcdefghi#keys-1",
+    "type": "Ed25519VerificationKey2020", 
+    "controller": "did:example:pqrstuvwxyz0987654321",
+    "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+  }]
+}
+```
+
+
+The easiest way to describe the controller-subject relationship is by coming back to Alice and Bob for an analogy.
 
 Alice and Bob (controller group) have a baby. They decide to get their baby a DID. The baby is the *subject* of the DID, but may not be ready for the responsibility of managing the DID yet. Alice and Bob can use their own DID's verification methods to control their baby's DID on behalf of their baby.
 
