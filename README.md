@@ -3,5 +3,5 @@ This repository is the roadmap for our new docs sitemap. Each folder name and fi
 
 ## Current Status
 <img
-    src="/Static/sitemap-visual.png" width="300" height="700"
+    src="/Static/sitemap-visual.png" width="400" height="600"
 />
