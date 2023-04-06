@@ -1,0 +1,398 @@
+<style>
+
+body {
+  font-family: sans-serif;
+}
+
+body > progress {
+  position: fixed;
+  inset: 0;
+  display: block;
+  width: 50vw;
+  margin: calc(50vh - 0.5em) 25vw;
+}
+
+body > progress ~ * {
+  display: none;
+}
+
+main {
+  max-width: 1000px;
+  margin: 1em auto 5em;
+}
+
+main .output {
+  width: 100%;
+  margin-top: 1em;
+}
+
+main progress {
+  vertical-align: middle;
+  visibility: hidden;
+}
+
+main input[type="file"] {
+  display: block;
+  margin-bottom: 0.5em;
+}
+
+main textarea {
+  display: block;
+  width: 100%;
+  min-height: 8em;
+  font-family: monospace;
+  resize: vertical;
+}
+
+main code {
+  font-size: 90%;
+}
+
+</style>
+
+<progress></progress>
+<main>
+  <h1>Web5</h1>
+  <section id="did-create">
+    <h1>Create a Decentralized Identifier</h1>
+    <div class="input">
+      <pre><code>const did = await web5.did.create('ion');</code></pre>
+      <button>Run!</button>
+    </div>
+    <div class="output">
+      <textarea></textarea>
+    </div>
+  </section>
+  <section id="did-register">
+    <h1>Register a Decentralized Identifier</h1>
+    <div class="input">
+      <pre><code>await web5.did.register({
+  connected: true,
+  did: did.id,
+  endpoint: 'app://dwn',
+  keys: did.keys[0].keypair,
+});</code></pre>
+      <button disabled>Run!</button>
+    </div>
+    <div class="output"></div>
+  </section>
+  <section id="dwn-write">
+    <h1>Write some data</h1>
+    <div class="input">
+      <pre><code>const writeResult = await web5.dwn.records.write(did.id, {
+  author: did.id,
+  data,
+  message: {
+    dataFormat: 'image/png',
+  },
+});</code></pre>
+      <input type="file" accept="image/png" disabled>
+      <button disabled>Run!</button>
+      <progress></progress>
+    </div>
+    <div class="output">
+      <textarea readonly></textarea>
+    </div>
+  </section>
+  <section id="dwn-query">
+    <h1>Query for messages</h1>
+    <div class="input">
+      <pre><code>const queryResult = await web5.dwn.records.query(did.id, {
+  author: did.id,
+  message: {
+    filter: {
+      dataFormat: 'image/png',
+    },
+  },
+});</code></pre>
+      <button disabled>Run!</button>
+      <progress></progress>
+    </div>
+    <div class="output">
+      <textarea readonly></textarea>
+    </div>
+  </section>
+  <section id="dwn-read">
+    <h1>Read the data</h1>
+    <div class="input">
+      <pre><code>const readResult = await web5.dwn.records.read(did.id, {
+  author: did.id,
+  message: {
+    recordId,
+  },
+});</code></pre>
+      <button disabled>Run!</button>
+      <progress></progress>
+    </div>
+    <div class="output"></div>
+  </section>
+  <section id="dwn-delete">
+    <h1>Delete the message</h1>
+    <div class="input">
+      <pre><code>const deleteResult = await web5.dwn.records.delete(did.id, {
+  author: did.id,
+  message: {
+    recordId,
+  },
+});</code></pre>
+      <button disabled>Run!</button>
+      <progress></progress>
+    </div>
+    <div class="output">
+      <textarea readonly></textarea>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+
+/* ========================== */
+/* ========== Web5 ========== */
+
+import { Web5 } from 'https://cdn.jsdelivr.net/npm/@tbd54566975/web5@0.4.0-unstable.e6470ce-2023.4.01-19-39-11/dist/browser.mjs';
+
+const web5 = new Web5;
+
+async function didCreate() {
+  const did = await web5.did.create('ion');
+  return did;
+};
+
+async function didRegister(did) {
+  await web5.did.register({
+    connected: true,
+    did: did.id,
+    endpoint: 'app://dwn',
+    keys: did.keys[0].keypair,
+  });
+};
+
+async function dwnWritePNGRecord(did, data) {
+  const result = await web5.dwn.records.write(did.id, {
+    author: did.id,
+    data,
+    message: {
+      dataFormat: 'image/png',
+    },
+  });
+  return result;
+}
+
+async function dwnQueryPNGRecords(did) {
+  const result = await web5.dwn.records.query(did.id, {
+    author: did.id,
+    message: {
+      filter: {
+        dataFormat: 'image/png',
+      },
+    },
+  });
+  return result;
+}
+
+async function dwnReadDataFromRecordWithId(did, recordId) {
+  const result = await web5.dwn.records.read(did.id, {
+    author: did.id,
+    message: {
+      recordId,
+    },
+  });
+  return result;
+}
+
+async function dwnDeleteRecordWithId(did, recordId) {
+  const result = await web5.dwn.records.delete(did.id, {
+    author: did.id,
+    message: {
+      recordId,
+    },
+  });
+  return result;
+}
+
+/* ========== Web5 ========== */
+/* ========================== */
+
+
+
+document.querySelector('progress').remove();
+
+const didCreateInputButton = document.querySelector('#did-create .input button');
+const didCreateOutputTextarea = document.querySelector('#did-create .output textarea');
+
+const didRegisterInputButton = document.querySelector('#did-register .input button');
+const didRegisterOutput = document.querySelector('#did-register .output');
+
+const dwnWriteInputFile = document.querySelector('#dwn-write .input input[type="file"]');
+const dwnWriteInputButton = document.querySelector('#dwn-write .input button');
+const dwnWriteInputProgress = document.querySelector('#dwn-write .input progress');
+const dwnWriteOutputTextarea = document.querySelector('#dwn-write .output textarea');
+
+const dwnQueryInputButton = document.querySelector('#dwn-query .input button');
+const dwnQueryInputProgress = document.querySelector('#dwn-query .input progress');
+const dwnQueryOutputTextarea = document.querySelector('#dwn-query .output textarea');
+
+const dwnReadInputButton = document.querySelector('#dwn-read .input button');
+const dwnReadInputProgress = document.querySelector('#dwn-read .input progress');
+const dwnReadOutput = document.querySelector('#dwn-read .output');
+
+const dwnDeleteInputButton = document.querySelector('#dwn-delete .input button');
+const dwnDeleteInputProgress = document.querySelector('#dwn-delete .input progress');
+const dwnDeleteOutputTextarea = document.querySelector('#dwn-delete .output textarea');
+
+function parseDid() {
+  try {
+    return JSON.parse(didCreateOutputTextarea.value);
+  } catch {
+    return undefined;
+  }
+}
+
+function parseQuery() {
+  try {
+    return JSON.parse(dwnQueryOutputTextarea.value);
+  } catch {
+    return undefined;
+  }
+}
+
+function update() {
+  if (!parseDid()) {
+    didRegisterInputButton.disabled = true;
+    didRegisterOutput.innerHTML = '';
+  }
+
+  if (!didRegisterOutput.innerHTML) {
+    dwnWriteInputFile.disabled = true;
+    dwnWriteInputButton.disabled = true;
+    dwnWriteInputProgress.style.visibility = 'hidden';
+    dwnWriteOutputTextarea.value = '';
+
+    dwnQueryInputButton.disabled = true;
+    dwnQueryInputProgress.style.visibility = 'hidden';
+    dwnQueryOutputTextarea.value = '';
+  }
+
+  if (!parseQuery()?.entries?.length) {
+    dwnReadInputButton.disabled = true;
+    dwnReadInputProgress.style.visibility = 'hidden';
+    dwnReadOutput.innerHTML = '';
+
+    dwnDeleteInputButton.disabled = true;
+    dwnDeleteInputProgress.style.visibility = 'hidden';
+    dwnDeleteOutputTextarea.value = '';
+  }
+}
+
+didCreateInputButton.addEventListener('click', async () => {
+  const did = await didCreate();
+
+  didCreateOutputTextarea.value = JSON.stringify(did, null, 2);
+
+  didRegisterInputButton.disabled = false;
+  didRegisterOutput.innerHTML = '';
+  update();
+});
+didCreateOutputTextarea.addEventListener('input', () => {
+  didRegisterInputButton.disabled = false;
+  didRegisterOutput.innerHTML = '';
+  update();
+});
+
+didRegisterInputButton.addEventListener('click', async () => {
+  didRegisterInputButton.disabled = true;
+
+  const did = parseDid();
+  await didRegister(did);
+
+  didRegisterOutput.innerHTML = '&#x2714; Registered!';
+
+  dwnWriteInputFile.disabled = false;
+  dwnQueryInputButton.disabled = false;
+  update();
+});
+
+dwnWriteInputFile.addEventListener('input', () => {
+  dwnWriteInputButton.disabled = false;
+  dwnWriteOutputTextarea.value = '';
+  update();
+});
+
+dwnWriteInputButton.addEventListener('click', async () => {
+  dwnWriteInputButton.disabled = true;
+  dwnWriteInputProgress.style.visibility = 'visible';
+
+  dwnWriteOutputTextarea.value = '';
+
+  const did = parseDid();
+  for (const file of dwnWriteInputFile.files) {
+    const buffer = await file.arrayBuffer();
+    const data = new Uint8Array(buffer);
+    const result = await dwnWritePNGRecord(did, data);
+
+    dwnWriteOutputTextarea.value += JSON.stringify(result, null, 2);
+  }
+
+  dwnWriteInputButton.disabled = false;
+  dwnWriteInputProgress.style.visibility = 'hidden';
+  dwnQueryInputButton.disabled = false;
+  update();
+});
+
+dwnQueryInputButton.addEventListener('click', async () => {
+  dwnQueryInputButton.disabled = true;
+  dwnQueryInputProgress.style.visibility = 'visible';
+  dwnQueryOutputTextarea.value = '';
+
+  const did = parseDid();
+  const result = await dwnQueryPNGRecords(did);
+
+  dwnQueryOutputTextarea.value = JSON.stringify(result, (key, value) => key !== 'encodedData' ? value : undefined, 2);
+
+  dwnQueryInputButton.disabled = false;
+  dwnQueryInputProgress.style.visibility = 'hidden';
+  dwnReadInputButton.disabled = false;
+  dwnDeleteInputButton.disabled = false;
+  update();
+});
+
+dwnReadInputButton.addEventListener('click', async () => {
+  dwnReadInputButton.disabled = true;
+  dwnReadInputProgress.style.visibility = 'visible';
+
+  dwnReadOutput.innerHTML = '';
+
+  const did = parseDid();
+  const query = parseQuery();
+  for (const { recordId } of query.entries) {
+    const result = await dwnReadDataFromRecordWithId(did, recordId);
+    const data = await web5.dwn.SDK.DataStream.toBytes(result.data);
+
+    const img = dwnReadOutput.appendChild(document.createElement('img'));
+    img.src = URL.createObjectURL(new Blob([ data ]));
+  }
+
+  dwnReadInputButton.disabled = false;
+  dwnReadInputProgress.style.visibility = 'hidden';
+  update();
+});
+
+dwnDeleteInputButton.addEventListener('click', async () => {
+  dwnDeleteInputButton.disabled = true;
+  dwnDeleteInputProgress.style.visibility = 'visible';
+
+  dwnDeleteOutputTextarea.value = '';
+
+  const did = parseDid();
+  const query = parseQuery();
+  for (const { recordId } of query.entries) {
+    const result = await dwnDeleteRecordWithId(did, recordId);
+    dwnDeleteOutputTextarea.value += JSON.stringify(result, null, 2);
+  }
+
+  dwnReadInputButton.disabled = true;
+  dwnDeleteInputProgress.style.visibility = 'hidden';
+  update();
+});
+
+</script>
