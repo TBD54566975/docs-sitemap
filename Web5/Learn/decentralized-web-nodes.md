@@ -1,10 +1,6 @@
-
 ## Decentralized Web Nodes 
 
 A Decentralized Web Node is a data storage and message relay mechanism that entities can use to locate public or private permissioned data related to a given DID.
-
-[diagram expressing all of these concepts]
-
 
 ### Personal Data Store
 A DWN is a personal data store. This means you can:
@@ -12,7 +8,8 @@ A DWN is a personal data store. This means you can:
 - **Back up your data:** Host multiple nodes in different places, keep them all synced. If one goes down, you have your back up. When it comes back up, the sync is effortless.
 - **Send and receive data:** Alice controls her DWN using her DID. Bob controls his DWN with his DID. Alice can send data to Bob just by resolving his DID.
 
-[image of Alice sending Bob data]
+![](https://i.imgur.com/YeOneps.png)
+*Topology of an exchange between Decentralized Web Nodes, from [DIF Decentralized Web Node Spec](https://identity.foundation/decentralized-web-node/spec/#topology)*
 
 ### Authorization
 * Note: Revisit in more detail: permissions are explicit and manual vs protocols are descriptive, syntactic, and contractual

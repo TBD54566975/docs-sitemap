@@ -12,9 +12,6 @@ They need DIDs so that others can easily find them on the decentralized web. Thi
 
 A [Decentralized Identifier (DID)](https://www.w3.org/TR/did-core/) is an address representing who you are on the decentralized web. They can point to a person, organization, thing, data model, or abstract entity. It's through your DID that others can send messages and data, and be granted access to information you wish to share.
 
-[image here from the spec]
-
-![](https://i.imgur.com/aiHSZKA.png)
 
 A DID is a type of digital identity that is created and managed independently of any centralized authority or organization. The basic idea behind a DID is to give individuals and organizations control over their own identity information and to allow them to share that information selectively and securely with others as needed. This means that they can choose when and how to share their identity information, and with whom.
 
@@ -56,17 +53,15 @@ If you type a URL into your browser, it resolves to a web page. You can use a se
 The only required field is the `id` field, which contains your DID. You might find many other fields in a DID Document, such as authentication material, encryption key material, and pointers to your DWN. Read more about the fields [here](https://www.w3.org/TR/did-core/#core-properties).
 
 
-
-
-
-
 #### Controller - Subject relationship
+![](https://i.imgur.com/OdWtmlt.png)
+*Example of a Controller Subject relationship diagram, from [W3C DID Core Spec](https://www.w3.org/TR/did-core/)*
+
 One of the fields you might find in a DID Document is the `controller`, which is an array of objects representing one or more controlling entities of the DID. The easiest way to describe the controller-subject relationship is by coming back to Alice and Bob for an analogy.
 
 
 Alice and Bob (controller group) have a baby. They decide to get their baby a DID. The baby is the *subject* of the DID, but may not be ready for the responsibility of managing the DID yet. Alice and Bob can use their own DID's verification methods to control their baby's DID on behalf of their baby.
 
-[Diagram for baby analogy]
 
 ### DID Key Management
 Your DIDs are secured with public-private key pairs. You should not let anyone have your private key, because the key material used to secure your DID is how you prove ownership of your DID. You should find a secure way to store your private key, such as through a secured keystore.
