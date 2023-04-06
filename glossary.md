@@ -1,4 +1,4 @@
-# TBD Developer Docs: Glossary
+# Glossary
 
 
 ## Centralized Authority
