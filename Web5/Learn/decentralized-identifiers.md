@@ -19,8 +19,8 @@ A DID is a "type of identifier that enables verifiable, decentralized digital id
 
 DIDs are typically represented as a unique resource identifier (URI) and are designed to be used for identity verification, authentication, and authorization.
 
-![](https://i.imgur.com/jjrB9SG.png)
-*Example of a Decentralized Identifier, from [W3C DID Core Specification](https://www.w3.org/TR/did-core/#a-simple-example)*
+![](https://developer.tbd.website/assets/images/did-example-80081a6570618c58432aa2a29b22a86c.png)
+*Example of a Decentralized Identifier*
 
 The key difference between a traditional centralized identifier, such as a username or email address, and a decentralized identifier is that the latter is not tied to a specific service provider or organization. An example of a centralized identifier you might have would be your Twitter handle or Google email address, where Twitter or Google are the centralized authority.
 
