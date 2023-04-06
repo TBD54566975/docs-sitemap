@@ -1,4 +1,6 @@
 ## Decentralized Identifiers (DIDs)
+*5 minute read*
+
 Alice and Bob want to participate in the decentralized web. We're going to learn about how Alice and Bob do that using Web5 and the concepts that make up the Web5 ecosystem.
 
 ### What are DIDs?

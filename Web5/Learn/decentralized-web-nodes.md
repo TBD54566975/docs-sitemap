@@ -1,4 +1,5 @@
 ## Decentralized Web Nodes 
+*3 minute read*
 
 A Decentralized Web Node is a data storage and message relay mechanism that entities can use to locate public or private permissioned data related to a given DID.
 
