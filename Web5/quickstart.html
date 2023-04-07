@@ -134,7 +134,7 @@ main .output {
     <div class="output"></div>
   </section>
   <section id="dwn-delete">
-    <h1>Delete the message</h1>
+    <h1>Delete the messages</h1>
     <div class="input">
       <pre><code>let deleteResult = await web5.dwn.records.delete(did.id, {
   author: did.id,
@@ -398,7 +398,7 @@ dwnDeleteInputButton.addEventListener('click', async () => {
   let query = parseQuery();
   for (let { recordId } of query.entries) {
     let result = await dwnDeleteRecordWithId(did, recordId);
-    dwnDeleteOutputTextarea.value += JSON.stringify(result, null, 2);
+    dwnDeleteOutputTextarea.value += JSON.stringify(result, null, 2) + '\n';
   }
 
   dwnReadInputButton.disabled = true;
