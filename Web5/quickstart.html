@@ -98,7 +98,10 @@ main .output {
       <progress></progress>
     </div>
     <div class="output">
-      <textarea readonly></textarea>
+      <details>
+        <summary>...</summary>
+        <textarea readonly></textarea>
+      </details>
     </div>
   </section>
   <section id="dwn-query">
@@ -116,7 +119,10 @@ main .output {
       <progress></progress>
     </div>
     <div class="output">
-      <textarea readonly></textarea>
+      <details>
+        <summary>...</summary>
+        <textarea readonly></textarea>
+      </details>
     </div>
   </section>
   <section id="dwn-read">
@@ -146,7 +152,10 @@ main .output {
       <progress></progress>
     </div>
     <div class="output">
-      <textarea readonly></textarea>
+      <details>
+        <summary>...</summary>
+        <textarea readonly></textarea>
+      </details>
     </div>
   </section>
 </main>
@@ -234,11 +243,13 @@ let didRegisterOutput = document.querySelector('#did-register .output');
 let dwnWriteInputFile = document.querySelector('#dwn-write .input input[type="file"]');
 let dwnWriteInputButton = document.querySelector('#dwn-write .input button');
 let dwnWriteInputProgress = document.querySelector('#dwn-write .input progress');
-let dwnWriteOutputTextarea = document.querySelector('#dwn-write .output textarea');
+let dwnWriteOutputSummary = document.querySelector('#dwn-write .output details summary');
+let dwnWriteOutputDetailsTextarea = document.querySelector('#dwn-write .output details textarea');
 
 let dwnQueryInputButton = document.querySelector('#dwn-query .input button');
 let dwnQueryInputProgress = document.querySelector('#dwn-query .input progress');
-let dwnQueryOutputTextarea = document.querySelector('#dwn-query .output textarea');
+let dwnQueryOutputSummary = document.querySelector('#dwn-query .output details summary');
+let dwnQueryOutputDetailsTextarea = document.querySelector('#dwn-query .output details textarea');
 
 let dwnReadInputButton = document.querySelector('#dwn-read .input button');
 let dwnReadInputProgress = document.querySelector('#dwn-read .input progress');
@@ -246,7 +257,8 @@ let dwnReadOutput = document.querySelector('#dwn-read .output');
 
 let dwnDeleteInputButton = document.querySelector('#dwn-delete .input button');
 let dwnDeleteInputProgress = document.querySelector('#dwn-delete .input progress');
-let dwnDeleteOutputTextarea = document.querySelector('#dwn-delete .output textarea');
+let dwnDeleteOutputSummary = document.querySelector('#dwn-delete .output details summary');
+let dwnDeleteOutputDetailsTextarea = document.querySelector('#dwn-delete .output details textarea');
 
 function parseDid() {
   try {
@@ -258,7 +270,7 @@ function parseDid() {
 
 function parseQuery() {
   try {
-    return JSON.parse(dwnQueryOutputTextarea.value);
+    return JSON.parse(dwnQueryOutputDetailsTextarea.value);
   } catch {
     return undefined;
   }
@@ -274,11 +286,13 @@ function update() {
     dwnWriteInputFile.disabled = true;
     dwnWriteInputButton.disabled = true;
     dwnWriteInputProgress.style.visibility = 'hidden';
-    dwnWriteOutputTextarea.value = '';
+    dwnWriteOutputSummary.innerHTML = '...';
+    dwnWriteOutputDetailsTextarea.value = '';
 
     dwnQueryInputButton.disabled = true;
     dwnQueryInputProgress.style.visibility = 'hidden';
-    dwnQueryOutputTextarea.value = '';
+    dwnQueryOutputSummary.innerHTML = '...';
+    dwnQueryOutputDetailsTextarea.value = '';
   }
 
   if (!parseQuery()?.entries?.length) {
@@ -288,7 +302,8 @@ function update() {
 
     dwnDeleteInputButton.disabled = true;
     dwnDeleteInputProgress.style.visibility = 'hidden';
-    dwnDeleteOutputTextarea.value = '';
+    dwnDeleteOutputSummary.innerHTML = '...';
+    dwnDeleteOutputDetailsTextarea.value = '';
   }
 }
 
@@ -325,7 +340,8 @@ didRegisterInputButton.addEventListener('click', async () => {
 
 dwnWriteInputFile.addEventListener('input', () => {
   dwnWriteInputButton.disabled = false;
-  dwnWriteOutputTextarea.value = '';
+  dwnWriteOutputSummary.innerHTML = '...';
+  dwnWriteOutputDetailsTextarea.value = '';
   update();
 });
 
@@ -333,7 +349,7 @@ dwnWriteInputButton.addEventListener('click', async () => {
   dwnWriteInputButton.disabled = true;
   dwnWriteInputProgress.style.visibility = 'visible';
 
-  dwnWriteOutputTextarea.value = '';
+  dwnWriteOutputSummary.innerHTML = '...';
 
   let did = parseDid();
   for (let file of dwnWriteInputFile.files) {
@@ -341,8 +357,11 @@ dwnWriteInputButton.addEventListener('click', async () => {
     let data = new Uint8Array(buffer);
     let result = await dwnWritePNGRecord(did, data);
 
-    dwnWriteOutputTextarea.value += JSON.stringify(result, null, 2);
+    dwnWriteOutputDetailsTextarea.value += JSON.stringify(result, null, 2) + '\n';
   }
+  dwnWriteOutputDetailsTextarea.scrollTop = dwnWriteOutputDetailsTextarea.scrollHeight;
+
+  dwnWriteOutputSummary.innerHTML = '&#x2714; Written!';
 
   dwnWriteInputButton.disabled = false;
   dwnWriteInputProgress.style.visibility = 'hidden';
@@ -353,12 +372,15 @@ dwnWriteInputButton.addEventListener('click', async () => {
 dwnQueryInputButton.addEventListener('click', async () => {
   dwnQueryInputButton.disabled = true;
   dwnQueryInputProgress.style.visibility = 'visible';
-  dwnQueryOutputTextarea.value = '';
+
+  dwnQueryOutputSummary.innerHTML = '...';
+  dwnQueryOutputDetailsTextarea.value = '';
 
   let did = parseDid();
   let result = await dwnQueryPNGRecords(did);
 
-  dwnQueryOutputTextarea.value = JSON.stringify(result, (key, value) => key !== 'encodedData' ? value : undefined, 2);
+  dwnQueryOutputSummary.innerHTML = `&#x2714; Found ${result.entries?.length ?? 0} entries!`;
+  dwnQueryOutputDetailsTextarea.value = JSON.stringify(result, (key, value) => key !== 'encodedData' ? value : undefined, 2);
 
   dwnQueryInputButton.disabled = false;
   dwnQueryInputProgress.style.visibility = 'hidden';
@@ -392,14 +414,17 @@ dwnDeleteInputButton.addEventListener('click', async () => {
   dwnDeleteInputButton.disabled = true;
   dwnDeleteInputProgress.style.visibility = 'visible';
 
-  dwnDeleteOutputTextarea.value = '';
+  dwnDeleteOutputSummary.innerHTML = '...';
 
   let did = parseDid();
   let query = parseQuery();
   for (let { recordId } of query.entries) {
     let result = await dwnDeleteRecordWithId(did, recordId);
-    dwnDeleteOutputTextarea.value += JSON.stringify(result, null, 2) + '\n';
+    dwnDeleteOutputDetailsTextarea.value += JSON.stringify(result, null, 2) + '\n';
   }
+  dwnDeleteOutputDetailsTextarea.scrollTop = dwnDeleteOutputDetailsTextarea.scrollHeight;
+
+  dwnDeleteOutputSummary.innerHTML = `&#x2714; Deleted ${query.entries.length} entries!`;
 
   dwnReadInputButton.disabled = true;
   dwnDeleteInputProgress.style.visibility = 'hidden';
