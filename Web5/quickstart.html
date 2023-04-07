@@ -62,7 +62,12 @@ main .output {
       <button>Run!</button>
     </div>
     <div class="output">
-      <textarea></textarea>
+      <details>
+        <summary>
+          <code>...</code>
+        </summary>
+        <textarea></textarea>
+      </details>
     </div>
   </section>
   <section id="did-register">
@@ -220,7 +225,8 @@ async function dwnDeleteRecordWithId(did, recordId) {
 document.querySelector('progress').remove();
 
 let didCreateInputButton = document.querySelector('#did-create .input button');
-let didCreateOutputTextarea = document.querySelector('#did-create .output textarea');
+let didCreateOutputSummaryCode = document.querySelector('#did-create .output details summary code');
+let didCreateOutputDetailsTextarea = document.querySelector('#did-create .output details textarea');
 
 let didRegisterInputButton = document.querySelector('#did-register .input button');
 let didRegisterOutput = document.querySelector('#did-register .output');
@@ -244,7 +250,7 @@ let dwnDeleteOutputTextarea = document.querySelector('#dwn-delete .output textar
 
 function parseDid() {
   try {
-    return JSON.parse(didCreateOutputTextarea.value);
+    return JSON.parse(didCreateOutputDetailsTextarea.value);
   } catch {
     return undefined;
   }
@@ -289,13 +295,16 @@ function update() {
 didCreateInputButton.addEventListener('click', async () => {
   let did = await didCreate();
 
-  didCreateOutputTextarea.value = JSON.stringify(did, null, 2);
+  didCreateOutputSummaryCode.innerHTML = did.internalId;
+  didCreateOutputDetailsTextarea.value = JSON.stringify(did, null, 2);
 
   didRegisterInputButton.disabled = false;
   didRegisterOutput.innerHTML = '';
   update();
 });
-didCreateOutputTextarea.addEventListener('input', () => {
+didCreateOutputDetailsTextarea.addEventListener('input', () => {
+  didCreateOutputSummaryCode.innerHTML = parseDid()?.internalId ?? '...';
+
   didRegisterInputButton.disabled = false;
   didRegisterOutput.innerHTML = '';
   update();
